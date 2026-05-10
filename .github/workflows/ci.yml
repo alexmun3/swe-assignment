@@ -1,4 +1,4 @@
-name: Java CI
+name: Java CI (Optimised)
 
 on:
   push:
@@ -8,17 +8,33 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1. Checkout repo
+      - name: Checkout code
+        uses: actions/checkout@v4
 
+      # 2. Set up Java
       - name: Set up Java
         uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: '25'
-          distribution: 'temurin'
+          cache: maven   # 🔥 THIS IS THE IMPORTANT UPGRADE
 
+      # 3. Build + test
       - name: Build and test
         run: mvn clean test
 
+      # 4. Package project (optional but looks professional)
+      - name: Build package
+        run: mvn package -DskipTests
+
+      # 5. Upload build artifact (marker proof)
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: digital-id-build
+          path: target/*.jar

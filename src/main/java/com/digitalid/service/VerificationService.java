@@ -1,5 +1,6 @@
 package com.digitalid.service;
 
+import com.digitalid.logging.AuditLogger;
 import com.digitalid.model.DigitalID;
 import com.digitalid.model.OrganisationType;
 import com.digitalid.model.Status;
@@ -7,6 +8,8 @@ import com.digitalid.model.Status;
 public class VerificationService {
 
     private final DigitalIDService digitalIDService;
+    private final AuditLogger auditLogger =
+            new AuditLogger();
 
     public VerificationService(DigitalIDService digitalIDService) {
 
@@ -16,6 +19,13 @@ public class VerificationService {
     public String verifyIdentity(String id,
                                  OrganisationType organisationType) {
 
+        auditLogger.log(
+                "Verification request for ID "
+                        + id
+                        + " by "
+                        + organisationType
+        );
+
         DigitalID digitalID = digitalIDService.getID(id);
 
         if (digitalID == null) {
@@ -24,9 +34,11 @@ public class VerificationService {
 
         return switch (organisationType) {
 
-            case BANK, EMPLOYER -> verifyForBasicOrganisation(digitalID);
+            case BANK, EMPLOYER ->
+                    verifyForBasicOrganisation(digitalID);
 
-            case TAX_AUTHORITY -> verifyForTaxAuthority(digitalID);
+            case TAX_AUTHORITY ->
+                    verifyForTaxAuthority(digitalID);
 
             case DRIVING_LICENCE_AUTHORITY ->
                     verifyForDrivingAuthority(digitalID);
@@ -35,7 +47,6 @@ public class VerificationService {
                     verifyForCentralAuthority(digitalID);
         };
     }
-
     private String verifyForBasicOrganisation(DigitalID digitalID) {
 
         if (digitalID.getStatus() == Status.ACTIVE) {

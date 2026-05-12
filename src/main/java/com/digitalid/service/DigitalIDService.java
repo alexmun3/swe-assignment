@@ -1,5 +1,6 @@
 package com.digitalid.service;
 
+import com.digitalid.logging.AuditLogger;
 import com.digitalid.model.DigitalID;
 import com.digitalid.model.Status;
 import com.digitalid.validation.IdentityValidator;
@@ -11,7 +12,11 @@ public class DigitalIDService {
 
     private final Map<String, DigitalID> database = new HashMap<>();
 
-    private final IdentityValidator validator = new IdentityValidator();
+    private final IdentityValidator validator =
+            new IdentityValidator();
+
+    private final AuditLogger auditLogger =
+            new AuditLogger();
 
     public DigitalID createID(String id,
                               String name,
@@ -26,6 +31,8 @@ public class DigitalIDService {
         );
 
         database.put(id, digitalID);
+
+        auditLogger.log("Created Digital ID: " + id);
 
         return digitalID;
     }
@@ -49,6 +56,8 @@ public class DigitalIDService {
 
         digitalID.revoke();
 
+        auditLogger.log("Revoked Digital ID: " + id);
+
         return true;
     }
 
@@ -66,10 +75,13 @@ public class DigitalIDService {
 
         digitalID.suspend();
 
+        auditLogger.log("Suspended Digital ID: " + id);
+
         return true;
     }
 
-    public boolean updateAddress(String id, String newAddress) {
+    public boolean updateAddress(String id,
+                                 String newAddress) {
 
         DigitalID digitalID = database.get(id);
 
@@ -82,6 +94,10 @@ public class DigitalIDService {
         }
 
         digitalID.updateAddress(newAddress);
+
+        auditLogger.log(
+                "Updated address for Digital ID: " + id
+        );
 
         return true;
     }

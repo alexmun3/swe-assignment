@@ -3,15 +3,13 @@ package com.digitalid.service;
 import com.digitalid.logging.AuditLogger;
 import com.digitalid.model.DigitalID;
 import com.digitalid.model.Status;
+import com.digitalid.repository.DigitalIDRepository;
 import com.digitalid.validation.IdentityValidator;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class DigitalIDService {
 
-    private final Map<String, DigitalID> database =
-            new HashMap<>();
+    private final DigitalIDRepository repository =
+            new DigitalIDRepository();
 
     private final IdentityValidator validator =
             new IdentityValidator();
@@ -24,7 +22,7 @@ public class DigitalIDService {
                               String dob,
                               String address) {
 
-        if (database.containsKey(id)) {
+        if (repository.existsById(id)) {
             return null;
         }
 
@@ -35,7 +33,7 @@ public class DigitalIDService {
                 address
         );
 
-        database.put(id, digitalID);
+        repository.save(digitalID);
 
         auditLogger.log("Created Digital ID: " + id);
 
@@ -44,12 +42,13 @@ public class DigitalIDService {
 
     public DigitalID getID(String id) {
 
-        return database.get(id);
+        return repository.findById(id);
     }
 
     public boolean revokeID(String id) {
 
-        DigitalID digitalID = database.get(id);
+        DigitalID digitalID =
+                repository.findById(id);
 
         if (digitalID == null) {
             return false;
@@ -68,7 +67,8 @@ public class DigitalIDService {
 
     public boolean suspendID(String id) {
 
-        DigitalID digitalID = database.get(id);
+        DigitalID digitalID =
+                repository.findById(id);
 
         if (digitalID == null) {
             return false;
@@ -88,7 +88,8 @@ public class DigitalIDService {
     public boolean updateAddress(String id,
                                  String newAddress) {
 
-        DigitalID digitalID = database.get(id);
+        DigitalID digitalID =
+                repository.findById(id);
 
         if (digitalID == null) {
             return false;
@@ -109,7 +110,8 @@ public class DigitalIDService {
 
     public boolean markDrivingTestPassed(String id) {
 
-        DigitalID digitalID = database.get(id);
+        DigitalID digitalID =
+                repository.findById(id);
 
         if (digitalID == null) {
             return false;
@@ -127,7 +129,8 @@ public class DigitalIDService {
     public boolean setDrivingRestriction(String id,
                                          boolean restricted) {
 
-        DigitalID digitalID = database.get(id);
+        DigitalID digitalID =
+                repository.findById(id);
 
         if (digitalID == null) {
             return false;
@@ -145,7 +148,8 @@ public class DigitalIDService {
     public boolean setTaxRestriction(String id,
                                      boolean restricted) {
 
-        DigitalID digitalID = database.get(id);
+        DigitalID digitalID =
+                repository.findById(id);
 
         if (digitalID == null) {
             return false;
@@ -163,7 +167,8 @@ public class DigitalIDService {
     public boolean setFraudFlag(String id,
                                 boolean fraudFlag) {
 
-        DigitalID digitalID = database.get(id);
+        DigitalID digitalID =
+                repository.findById(id);
 
         if (digitalID == null) {
             return false;
@@ -180,7 +185,8 @@ public class DigitalIDService {
 
     public boolean isValid(String id) {
 
-        DigitalID digitalID = database.get(id);
+        DigitalID digitalID =
+                repository.findById(id);
 
         return digitalID != null
                 && validator.isValidForVerification(digitalID)

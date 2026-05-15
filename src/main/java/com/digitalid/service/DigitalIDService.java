@@ -10,7 +10,8 @@ import java.util.Map;
 
 public class DigitalIDService {
 
-    private final Map<String, DigitalID> database = new HashMap<>();
+    private final Map<String, DigitalID> database =
+            new HashMap<>();
 
     private final IdentityValidator validator =
             new IdentityValidator();
@@ -22,6 +23,10 @@ public class DigitalIDService {
                               String name,
                               String dob,
                               String address) {
+
+        if (database.containsKey(id)) {
+            return null;
+        }
 
         DigitalID digitalID = new DigitalID(
                 id,
@@ -97,6 +102,77 @@ public class DigitalIDService {
 
         auditLogger.log(
                 "Updated address for Digital ID: " + id
+        );
+
+        return true;
+    }
+
+    public boolean markDrivingTestPassed(String id) {
+
+        DigitalID digitalID = database.get(id);
+
+        if (digitalID == null) {
+            return false;
+        }
+
+        digitalID.markDrivingTestPassed();
+
+        auditLogger.log(
+                "Driving test passed for Digital ID: " + id
+        );
+
+        return true;
+    }
+
+    public boolean setDrivingRestriction(String id,
+                                         boolean restricted) {
+
+        DigitalID digitalID = database.get(id);
+
+        if (digitalID == null) {
+            return false;
+        }
+
+        digitalID.setDrivingRestriction(restricted);
+
+        auditLogger.log(
+                "Driving restriction updated for Digital ID: " + id
+        );
+
+        return true;
+    }
+
+    public boolean setTaxRestriction(String id,
+                                     boolean restricted) {
+
+        DigitalID digitalID = database.get(id);
+
+        if (digitalID == null) {
+            return false;
+        }
+
+        digitalID.setTaxRestriction(restricted);
+
+        auditLogger.log(
+                "Tax restriction updated for Digital ID: " + id
+        );
+
+        return true;
+    }
+
+    public boolean setFraudFlag(String id,
+                                boolean fraudFlag) {
+
+        DigitalID digitalID = database.get(id);
+
+        if (digitalID == null) {
+            return false;
+        }
+
+        digitalID.setFraudFlag(fraudFlag);
+
+        auditLogger.log(
+                "Fraud flag updated for Digital ID: " + id
         );
 
         return true;

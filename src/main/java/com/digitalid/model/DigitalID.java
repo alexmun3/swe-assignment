@@ -10,6 +10,14 @@ public class DigitalID {
 
     private Status status;
 
+    private boolean passedDrivingTest;
+
+    private boolean drivingRestricted;
+
+    private boolean taxRestricted;
+
+    private boolean fraudFlag;
+
     public DigitalID(String idNumber,
                      String fullName,
                      String dateOfBirth,
@@ -19,7 +27,13 @@ public class DigitalID {
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+
         this.status = Status.ACTIVE;
+
+        this.passedDrivingTest = false;
+        this.drivingRestricted = false;
+        this.taxRestricted = false;
+        this.fraudFlag = false;
     }
 
     public String getIdNumber() {
@@ -42,6 +56,22 @@ public class DigitalID {
         return status;
     }
 
+    public boolean hasPassedDrivingTest() {
+        return passedDrivingTest;
+    }
+
+    public boolean isDrivingRestricted() {
+        return drivingRestricted;
+    }
+
+    public boolean isTaxRestricted() {
+        return taxRestricted;
+    }
+
+    public boolean hasFraudFlag() {
+        return fraudFlag;
+    }
+
     public void updateAddress(String address) {
         this.address = address;
     }
@@ -60,5 +90,21 @@ public class DigitalID {
 
     public boolean isActive() {
         return status == Status.ACTIVE;
+    }
+
+    public void markDrivingTestPassed() {
+        this.passedDrivingTest = true;
+    }
+
+    public void setDrivingRestriction(boolean restricted) {
+        this.drivingRestricted = restricted;
+    }
+
+    public void setTaxRestriction(boolean restricted) {
+        this.taxRestricted = restricted;
+    }
+
+    public void setFraudFlag(boolean fraudFlag) {
+        this.fraudFlag = fraudFlag;
     }
 }

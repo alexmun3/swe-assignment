@@ -61,4 +61,25 @@ public class DigitalIDServiceTest {
 
         assertFalse(service.isValid("UNKNOWN"));
     }
+
+    @Test
+    void shouldActivateSuspendedId() {
+
+        DigitalIDService service = new DigitalIDService();
+
+        service.createID(
+                "ID1",
+                "Alex",
+                "2006-01-01",
+                "London"
+        );
+
+        service.suspendID("ID1");
+
+        boolean result = service.activateID("ID1");
+
+        assertTrue(result);
+
+        assertTrue(service.getID("ID1").isActive());
+    }
 }

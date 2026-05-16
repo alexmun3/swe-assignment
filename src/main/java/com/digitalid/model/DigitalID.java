@@ -10,18 +10,17 @@ public class DigitalID {
 
     private Status status;
 
-    private boolean passedDrivingTest;
-
+    private boolean fraudFlag;
+    private boolean drivingTestPassed;
     private boolean drivingRestricted;
-
     private boolean taxRestricted;
 
-    private boolean fraudFlag;
-
-    public DigitalID(String idNumber,
-                     String fullName,
-                     String dateOfBirth,
-                     String address) {
+    public DigitalID(
+            String idNumber,
+            String fullName,
+            String dateOfBirth,
+            String address
+    ) {
 
         this.idNumber = idNumber;
         this.fullName = fullName;
@@ -30,10 +29,10 @@ public class DigitalID {
 
         this.status = Status.ACTIVE;
 
-        this.passedDrivingTest = false;
+        this.fraudFlag = false;
+        this.drivingTestPassed = false;
         this.drivingRestricted = false;
         this.taxRestricted = false;
-        this.fraudFlag = false;
     }
 
     public String getIdNumber() {
@@ -56,22 +55,6 @@ public class DigitalID {
         return status;
     }
 
-    public boolean hasPassedDrivingTest() {
-        return passedDrivingTest;
-    }
-
-    public boolean isDrivingRestricted() {
-        return drivingRestricted;
-    }
-
-    public boolean isTaxRestricted() {
-        return taxRestricted;
-    }
-
-    public boolean hasFraudFlag() {
-        return fraudFlag;
-    }
-
     public void updateAddress(String address) {
         this.address = address;
     }
@@ -92,19 +75,35 @@ public class DigitalID {
         return status == Status.ACTIVE;
     }
 
-    public void markDrivingTestPassed() {
-        this.passedDrivingTest = true;
-    }
-
-    public void setDrivingRestriction(boolean restricted) {
-        this.drivingRestricted = restricted;
-    }
-
-    public void setTaxRestriction(boolean restricted) {
-        this.taxRestricted = restricted;
+    public boolean hasFraudFlag() {
+        return fraudFlag;
     }
 
     public void setFraudFlag(boolean fraudFlag) {
         this.fraudFlag = fraudFlag;
+    }
+
+    public boolean hasPassedDrivingTest() {
+        return drivingTestPassed;
+    }
+
+    public void markDrivingTestPassed() {
+        this.drivingTestPassed = true;
+    }
+
+    public boolean isDrivingRestricted() {
+        return drivingRestricted;
+    }
+
+    public void setDrivingRestriction(boolean drivingRestricted) {
+        this.drivingRestricted = drivingRestricted;
+    }
+
+    public boolean isTaxRestricted() {
+        return taxRestricted;
+    }
+
+    public void setTaxRestriction(boolean taxRestricted) {
+        this.taxRestricted = taxRestricted;
     }
 }

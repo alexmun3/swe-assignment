@@ -24,4 +24,9 @@ public class IdentityValidator {
 
         return digitalID.getStatus() == Status.ACTIVE;
     }
+
+    public boolean canBeActivated(DigitalID digitalID) {
+
+        return digitalID.getStatus() == Status.SUSPENDED;
+    }
 }

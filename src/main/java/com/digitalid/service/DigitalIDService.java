@@ -192,4 +192,23 @@ public class DigitalIDService {
                 && validator.isValidForVerification(digitalID)
                 && digitalID.getStatus() == Status.ACTIVE;
     }
+
+    public boolean activateID(String id) {
+
+        DigitalID digitalID = getID(id);
+
+        if (digitalID == null) {
+            return false;
+        }
+
+        if (!validator.canBeActivated(digitalID)) {
+            return false;
+        }
+
+        digitalID.activate();
+
+        auditLogger.log("Activated Digital ID: " + id);
+
+        return true;
+    }
 }

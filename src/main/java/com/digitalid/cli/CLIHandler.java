@@ -1,5 +1,6 @@
 package com.digitalid.cli;
 
+import com.digitalid.model.DigitalID;
 import com.digitalid.model.OperationResult;
 import com.digitalid.model.OrganisationType;
 import com.digitalid.service.DigitalIDService;
@@ -30,17 +31,11 @@ public class CLIHandler {
             switch (choice) {
 
                 case 1 -> createDigitalID();
-
                 case 2 -> updateAddress();
-
                 case 3 -> suspendDigitalID();
-
                 case 4 -> revokeDigitalID();
-
                 case 5 -> verifyIdentity();
-
                 case 6 -> viewIdentity();
-
                 case 7 -> exitSystem();
 
                 default -> System.out.println("Invalid option");
@@ -66,37 +61,32 @@ public class CLIHandler {
 
         try {
             return Integer.parseInt(scanner.nextLine());
-
         } catch (NumberFormatException e) {
-
             return -1;
         }
     }
 
     private void createDigitalID() {
 
-        System.out.print("ID: ");
-        String id = scanner.nextLine();
-
         System.out.print("Name: ");
         String name = scanner.nextLine();
 
-        System.out.print("DOB: ");
+        System.out.print("DOB (YYYY-MM-DD): ");
         String dob = scanner.nextLine();
 
         System.out.print("Address: ");
         String address = scanner.nextLine();
 
-        digitalIDService.createID(
-                id,
-                name,
-                dob,
-                address
-        );
+        DigitalID digitalID =
+                digitalIDService.createID(name, dob, address);
 
-        System.out.println(
-                "Digital ID created successfully"
-        );
+        if (digitalID == null) {
+            System.out.println("Failed to create Digital ID (possibly duplicate or invalid)");
+            return;
+        }
+
+        System.out.println("Digital ID created successfully");
+        System.out.println("Generated ID: " + digitalID.getIdNumber());
     }
 
     private void updateAddress() {
@@ -108,15 +98,10 @@ public class CLIHandler {
         String address = scanner.nextLine();
 
         boolean updated =
-                digitalIDService.updateAddress(
-                        id,
-                        address
-                );
+                digitalIDService.updateAddress(id, address);
 
         System.out.println(
-                updated
-                        ? "Address updated"
-                        : "Update failed"
+                updated ? "Address updated" : "Update failed"
         );
     }
 
@@ -129,9 +114,7 @@ public class CLIHandler {
                 digitalIDService.suspendID(id);
 
         System.out.println(
-                suspended
-                        ? "Digital ID suspended"
-                        : "Suspension failed"
+                suspended ? "Digital ID suspended" : "Suspension failed"
         );
     }
 
@@ -144,9 +127,7 @@ public class CLIHandler {
                 digitalIDService.revokeID(id);
 
         System.out.println(
-                revoked
-                        ? "Digital ID revoked"
-                        : "Revocation failed"
+                revoked ? "Digital ID revoked" : "Revocation failed"
         );
     }
 
@@ -155,18 +136,12 @@ public class CLIHandler {
         System.out.print("ID: ");
         String id = scanner.nextLine();
 
-        OrganisationType organisationType =
-                selectOrganisation();
+        OrganisationType organisationType = selectOrganisation();
 
         OperationResult result =
-                verificationService.verifyIdentity(
-                        id,
-                        organisationType
-                );
+                verificationService.verifyIdentity(id, organisationType);
 
-        System.out.println(
-                result.getMessage()
-        );
+        System.out.println(result.getMessage());
     }
 
     private OrganisationType selectOrganisation() {
@@ -185,15 +160,10 @@ public class CLIHandler {
         int choice = readIntInput();
 
         return switch (choice) {
-
             case 1 -> OrganisationType.BANK;
-
             case 2 -> OrganisationType.EMPLOYER;
-
             case 3 -> OrganisationType.TAX_AUTHORITY;
-
             case 4 -> OrganisationType.DRIVING_LICENCE_AUTHORITY;
-
             default -> OrganisationType.CENTRAL_AUTHORITY;
         };
     }
@@ -204,20 +174,14 @@ public class CLIHandler {
         String id = scanner.nextLine();
 
         OperationResult result =
-                verificationService.verifyIdentity(
-                        id,
-                        OrganisationType.CENTRAL_AUTHORITY
-                );
+                verificationService.verifyIdentity(id, OrganisationType.CENTRAL_AUTHORITY);
 
-        System.out.println(
-                result.getMessage()
-        );
+        System.out.println(result.getMessage());
     }
 
     private void exitSystem() {
 
         System.out.println("Exiting system...");
-
         System.exit(0);
     }
 }

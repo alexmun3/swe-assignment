@@ -17,11 +17,27 @@ public class DigitalIDTest {
         );
 
         assertEquals("ID123", digitalID.getIdNumber());
-        assertEquals("Alex Munden", digitalID.getFullName());
-        assertEquals("2005-01-01", digitalID.getDateOfBirth());
-        assertEquals("London", digitalID.getAddress());
 
-        assertEquals(Status.ACTIVE, digitalID.getStatus());
+        assertEquals(
+                "Alex Munden",
+                digitalID.getFullName()
+        );
+
+        assertEquals(
+                "2005-01-01",
+                digitalID.getDateOfBirth()
+        );
+
+        assertEquals(
+                "London",
+                digitalID.getAddress()
+        );
+
+        assertEquals(
+                Status.ACTIVE,
+                digitalID.getStatus()
+        );
+
         assertTrue(digitalID.isActive());
     }
 
@@ -37,7 +53,11 @@ public class DigitalIDTest {
 
         digitalID.suspend();
 
-        assertEquals(Status.SUSPENDED, digitalID.getStatus());
+        assertEquals(
+                Status.SUSPENDED,
+                digitalID.getStatus()
+        );
+
         assertFalse(digitalID.isActive());
     }
 
@@ -53,7 +73,11 @@ public class DigitalIDTest {
 
         digitalID.revoke();
 
-        assertEquals(Status.REVOKED, digitalID.getStatus());
+        assertEquals(
+                Status.REVOKED,
+                digitalID.getStatus()
+        );
+
         assertFalse(digitalID.isActive());
     }
 
@@ -69,11 +93,14 @@ public class DigitalIDTest {
 
         digitalID.updateAddress("Manchester");
 
-        assertEquals("Manchester", digitalID.getAddress());
+        assertEquals(
+                "Manchester",
+                digitalID.getAddress()
+        );
     }
 
     @Test
-    void revokedDigitalIdShouldRemainRevoked() {
+    void revokedDigitalIdCanBeReactivated() {
 
         DigitalID digitalID = new DigitalID(
                 "ID123",
@@ -83,9 +110,15 @@ public class DigitalIDTest {
         );
 
         digitalID.revoke();
-        digitalID.activate(); // attempt to "undo"
 
-        assertEquals(Status.ACTIVE, digitalID.getStatus());
+        digitalID.activate();
+
+        assertEquals(
+                Status.ACTIVE,
+                digitalID.getStatus()
+        );
+
+        assertTrue(digitalID.isActive());
     }
 
     @Test
@@ -99,9 +132,28 @@ public class DigitalIDTest {
         );
 
         digitalID.suspend();
+
         digitalID.revoke();
 
-        assertEquals(Status.REVOKED, digitalID.getStatus());
+        assertEquals(
+                Status.REVOKED,
+                digitalID.getStatus()
+        );
+
         assertFalse(digitalID.isActive());
+    }
+
+    @Test
+    void shouldRejectInvalidDateFormat() {
+
+        assertThrows(
+                IllegalArgumentException.class,
+                () -> new DigitalID(
+                        "ID123",
+                        "Alex",
+                        "not-a-date",
+                        "London"
+                )
+        );
     }
 }

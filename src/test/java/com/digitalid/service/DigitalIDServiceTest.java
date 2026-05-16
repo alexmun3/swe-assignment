@@ -12,12 +12,15 @@ public class DigitalIDServiceTest {
 
         DigitalIDService service = new DigitalIDService();
 
-        service.createID("ID1", "Alex", "2005-01-01", "London");
+        DigitalID created =
+                service.createID("Alex", "2005-01-01", "London");
 
-        DigitalID id = service.getID("ID1");
+        String id = created.getIdNumber();
 
-        assertNotNull(id);
-        assertEquals("Alex", id.getFullName());
+        DigitalID result = service.getID(id);
+
+        assertNotNull(result);
+        assertEquals("Alex", result.getFullName());
     }
 
     @Test
@@ -25,9 +28,12 @@ public class DigitalIDServiceTest {
 
         DigitalIDService service = new DigitalIDService();
 
-        service.createID("ID1", "Alex", "2005-01-01", "London");
+        DigitalID created =
+                service.createID("Alex", "2005-01-01", "London");
 
-        assertTrue(service.isValid("ID1"));
+        String id = created.getIdNumber();
+
+        assertTrue(service.isValid(id));
     }
 
     @Test
@@ -35,11 +41,14 @@ public class DigitalIDServiceTest {
 
         DigitalIDService service = new DigitalIDService();
 
-        service.createID("ID1", "Alex", "2005-01-01", "London");
+        DigitalID created =
+                service.createID("Alex", "2005-01-01", "London");
 
-        service.revokeID("ID1");
+        String id = created.getIdNumber();
 
-        assertFalse(service.isValid("ID1"));
+        service.revokeID(id);
+
+        assertFalse(service.isValid(id));
     }
 
     @Test
@@ -47,11 +56,14 @@ public class DigitalIDServiceTest {
 
         DigitalIDService service = new DigitalIDService();
 
-        service.createID("ID1", "Alex", "2005-01-01", "London");
+        DigitalID created =
+                service.createID("Alex", "2005-01-01", "London");
 
-        service.suspendID("ID1");
+        String id = created.getIdNumber();
 
-        assertFalse(service.isValid("ID1"));
+        service.suspendID(id);
+
+        assertFalse(service.isValid(id));
     }
 
     @Test
@@ -67,20 +79,18 @@ public class DigitalIDServiceTest {
 
         DigitalIDService service = new DigitalIDService();
 
-        service.createID(
-                "ID1",
-                "Alex",
-                "2006-01-01",
-                "London"
-        );
+        DigitalID created =
+                service.createID("Alex", "2006-01-01", "London");
 
-        service.suspendID("ID1");
+        String id = created.getIdNumber();
 
-        boolean result = service.activateID("ID1");
+        service.suspendID(id);
+
+        boolean result = service.activateID(id);
 
         assertTrue(result);
 
-        assertTrue(service.getID("ID1").isActive());
+        assertTrue(service.getID(id).isActive());
     }
 
     @Test
@@ -88,12 +98,15 @@ public class DigitalIDServiceTest {
 
         DigitalIDService service = new DigitalIDService();
 
-        service.createID("ID1", "Alex", "2005-01-01", "London");
+        DigitalID created =
+                service.createID("Alex", "2005-01-01", "London");
 
-        service.revokeID("ID1");
-        service.revokeID("ID1"); // second call
+        String id = created.getIdNumber();
 
-        assertFalse(service.isValid("ID1"));
+        service.revokeID(id);
+        service.revokeID(id);
+
+        assertFalse(service.isValid(id));
     }
 
     @Test
@@ -101,7 +114,8 @@ public class DigitalIDServiceTest {
 
         DigitalIDService service = new DigitalIDService();
 
-        boolean result = service.activateID("UNKNOWN");
+        boolean result =
+                service.activateID("UNKNOWN");
 
         assertFalse(result);
     }

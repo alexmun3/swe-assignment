@@ -17,17 +17,20 @@ public class DigitalIDService {
     private final AuditLogger auditLogger =
             new AuditLogger();
 
-    public DigitalID createID(String id,
-                              String name,
+    public DigitalID createID(String name,
                               String dob,
                               String address) {
 
-        if (repository.existsById(id)) {
-            return null;
+        String generatedId =
+                "ID-" + System.currentTimeMillis();
+
+        while (repository.existsById(generatedId)) {
+            generatedId =
+                    "ID-" + System.currentTimeMillis();
         }
 
         DigitalID digitalID = new DigitalID(
-                id,
+                generatedId,
                 name,
                 dob,
                 address
@@ -35,7 +38,7 @@ public class DigitalIDService {
 
         repository.save(digitalID);
 
-        auditLogger.log("Created Digital ID: " + id);
+        auditLogger.log("Created Digital ID: " + generatedId);
 
         return digitalID;
     }

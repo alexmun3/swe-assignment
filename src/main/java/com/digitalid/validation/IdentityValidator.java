@@ -7,7 +7,7 @@ public class IdentityValidator {
 
     public boolean canUpdate(DigitalID digitalID) {
 
-        return digitalID.getStatus() != Status.REVOKED;
+        return digitalID.getStatus() == Status.ACTIVE;
     }
 
     public boolean canBeSuspended(DigitalID digitalID) {

@@ -1,5 +1,6 @@
 package com.digitalid.cli;
 
+import com.digitalid.model.OperationResult;
 import com.digitalid.model.OrganisationType;
 import com.digitalid.service.DigitalIDService;
 import com.digitalid.service.VerificationService;
@@ -86,9 +87,16 @@ public class CLIHandler {
         System.out.print("Address: ");
         String address = scanner.nextLine();
 
-        digitalIDService.createID(id, name, dob, address);
+        digitalIDService.createID(
+                id,
+                name,
+                dob,
+                address
+        );
 
-        System.out.println("Digital ID created successfully");
+        System.out.println(
+                "Digital ID created successfully"
+        );
     }
 
     private void updateAddress() {
@@ -100,7 +108,10 @@ public class CLIHandler {
         String address = scanner.nextLine();
 
         boolean updated =
-                digitalIDService.updateAddress(id, address);
+                digitalIDService.updateAddress(
+                        id,
+                        address
+                );
 
         System.out.println(
                 updated
@@ -147,13 +158,15 @@ public class CLIHandler {
         OrganisationType organisationType =
                 selectOrganisation();
 
-        String result =
+        OperationResult result =
                 verificationService.verifyIdentity(
                         id,
                         organisationType
                 );
 
-        System.out.println(result);
+        System.out.println(
+                result.getMessage()
+        );
     }
 
     private OrganisationType selectOrganisation() {
@@ -190,17 +203,21 @@ public class CLIHandler {
         System.out.print("ID: ");
         String id = scanner.nextLine();
 
-        System.out.println(
+        OperationResult result =
                 verificationService.verifyIdentity(
                         id,
                         OrganisationType.CENTRAL_AUTHORITY
-                )
+                );
+
+        System.out.println(
+                result.getMessage()
         );
     }
 
     private void exitSystem() {
 
         System.out.println("Exiting system...");
+
         System.exit(0);
     }
 }

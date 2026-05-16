@@ -10,28 +10,48 @@ public class OperationResultTest {
     void shouldCreateSuccessfulResult() {
 
         OperationResult result =
-                new OperationResult(true, "VALID");
+                new OperationResult(
+                        true,
+                        "VALID"
+                );
 
         assertTrue(result.isSuccess());
-        assertEquals("VALID", result.getMessage());
+
+        assertEquals(
+                "VALID",
+                result.getMessage()
+        );
     }
 
     @Test
     void shouldCreateFailureResult() {
 
         OperationResult result =
-                new OperationResult(false, "INVALID");
+                new OperationResult(
+                        false,
+                        "INVALID"
+                );
 
         assertFalse(result.isSuccess());
-        assertEquals("INVALID", result.getMessage());
+
+        assertEquals(
+                "INVALID",
+                result.getMessage()
+        );
     }
 
     @Test
     void toStringShouldReturnMessage() {
 
         OperationResult result =
-                new OperationResult(true, "TEST MESSAGE");
+                new OperationResult(
+                        true,
+                        "TEST MESSAGE"
+                );
 
-        assertEquals("TEST MESSAGE", result.toString());
+        assertEquals(
+                "TEST MESSAGE",
+                result.toString()
+        );
     }
 }

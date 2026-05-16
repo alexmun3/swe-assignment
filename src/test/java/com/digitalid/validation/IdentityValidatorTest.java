@@ -64,4 +64,50 @@ public class IdentityValidatorTest {
 
         assertFalse(validator.canBeSuspended(digitalID));
     }
+
+    @Test
+    void shouldRejectUpdateForSuspendedID() {
+
+        DigitalID digitalID = new DigitalID(
+                "ID1",
+                "Alex",
+                "2005-01-01",
+                "London"
+        );
+
+        digitalID.suspend();
+
+        assertFalse(validator.canUpdate(digitalID));
+    }
+
+    @Test
+    void revokedIdShouldNeverAllowAnyOperation() {
+
+        DigitalID digitalID = new DigitalID(
+                "ID1",
+                "Alex",
+                "2005-01-01",
+                "London"
+        );
+
+        digitalID.revoke();
+
+        assertFalse(validator.canUpdate(digitalID));
+        assertFalse(validator.canBeSuspended(digitalID));
+    }
+
+    @Test
+    void shouldAllowActivationOnlyForSuspendedID() {
+
+        DigitalID digitalID = new DigitalID(
+                "ID1",
+                "Alex",
+                "2005-01-01",
+                "London"
+        );
+
+        digitalID.suspend();
+
+        assertTrue(validator.canBeActivated(digitalID));
+    }
 }

@@ -54,4 +54,23 @@ public class OperationResultTest {
                 result.toString()
         );
     }
+
+    @Test
+    void shouldHandleNullMessage() {
+
+        OperationResult result =
+                new OperationResult(true, null);
+
+        assertTrue(result.isSuccess());
+        assertNull(result.getMessage());
+    }
+
+    @Test
+    void toStringShouldMatchConstructorMessageExactly() {
+
+        OperationResult result =
+                new OperationResult(false, "SOME ERROR");
+
+        assertEquals("SOME ERROR", result.toString());
+    }
 }

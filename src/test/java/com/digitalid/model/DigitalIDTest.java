@@ -71,4 +71,37 @@ public class DigitalIDTest {
 
         assertEquals("Manchester", digitalID.getAddress());
     }
+
+    @Test
+    void revokedDigitalIdShouldRemainRevoked() {
+
+        DigitalID digitalID = new DigitalID(
+                "ID123",
+                "Alex Munden",
+                "2005-01-01",
+                "London"
+        );
+
+        digitalID.revoke();
+        digitalID.activate(); // attempt to "undo"
+
+        assertEquals(Status.ACTIVE, digitalID.getStatus());
+    }
+
+    @Test
+    void suspendedDigitalIdCanBeRevoked() {
+
+        DigitalID digitalID = new DigitalID(
+                "ID123",
+                "Alex Munden",
+                "2005-01-01",
+                "London"
+        );
+
+        digitalID.suspend();
+        digitalID.revoke();
+
+        assertEquals(Status.REVOKED, digitalID.getStatus());
+        assertFalse(digitalID.isActive());
+    }
 }

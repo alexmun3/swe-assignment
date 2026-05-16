@@ -12,6 +12,10 @@ public class DigitalIDRepository {
 
     public void save(DigitalID digitalID) {
 
+        if (digitalID == null) {
+            throw new IllegalArgumentException("DigitalID cannot be null");
+        }
+
         database.put(
                 digitalID.getIdNumber(),
                 digitalID
@@ -19,12 +23,10 @@ public class DigitalIDRepository {
     }
 
     public DigitalID findById(String id) {
-
         return database.get(id);
     }
 
     public boolean existsById(String id) {
-
         return database.containsKey(id);
     }
 }

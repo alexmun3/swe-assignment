@@ -67,4 +67,41 @@ public class DigitalIDRepositoryTest {
 
         assertFalse(repository.existsById("NOPE"));
     }
+
+    @Test
+    void shouldOverwriteExistingDigitalID() {
+
+        DigitalIDRepository repository = new DigitalIDRepository();
+
+        DigitalID first = new DigitalID(
+                "ID1",
+                "Alex",
+                "2006-01-01",
+                "London"
+        );
+
+        DigitalID second = new DigitalID(
+                "ID1",
+                "Alex Updated",
+                "2006-01-01",
+                "Manchester"
+        );
+
+        repository.save(first);
+        repository.save(second);
+
+        DigitalID result = repository.findById("ID1");
+
+        assertNotNull(result);
+        assertEquals("Alex Updated", result.getFullName());
+    }
+
+    @Test
+    void shouldHandleNullSaveGracefully() {
+
+        DigitalIDRepository repository = new DigitalIDRepository();
+
+        assertThrows(IllegalArgumentException.class,
+                () -> repository.save(null));
+    }
 }

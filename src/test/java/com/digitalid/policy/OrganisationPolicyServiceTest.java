@@ -138,4 +138,53 @@ public class OrganisationPolicyServiceTest {
                 result.getMessage()
         );
     }
+
+    @Test
+    void shouldFailTaxVerificationWhenInactiveEvenIfNotRestricted() {
+
+        DigitalID digitalID =
+                new DigitalID(
+                        "ID10",
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
+
+        digitalID.revoke(); // make it inactive
+
+        OperationResult result =
+                policyService.verifyForTaxAuthority(digitalID);
+
+        assertFalse(result.isSuccess());
+
+        assertEquals(
+                "TAX VERIFICATION FAILED",
+                result.getMessage()
+        );
+    }
+
+    @Test
+    void shouldPrioritiseDrivingRestrictionOverTestPassed() {
+
+        DigitalID digitalID =
+                new DigitalID(
+                        "ID11",
+                        "Emma",
+                        "1999-01-01",
+                        "Leeds"
+                );
+
+        digitalID.markDrivingTestPassed();
+        digitalID.setDrivingRestriction(true);
+
+        OperationResult result =
+                policyService.verifyForDrivingAuthority(digitalID);
+
+        assertFalse(result.isSuccess());
+
+        assertEquals(
+                "DRIVING RESTRICTION ACTIVE",
+                result.getMessage()
+        );
+    }
 }

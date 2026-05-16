@@ -82,4 +82,27 @@ public class DigitalIDServiceTest {
 
         assertTrue(service.getID("ID1").isActive());
     }
+
+    @Test
+    void shouldHandleDoubleRevokeGracefully() {
+
+        DigitalIDService service = new DigitalIDService();
+
+        service.createID("ID1", "Alex", "2005-01-01", "London");
+
+        service.revokeID("ID1");
+        service.revokeID("ID1"); // second call
+
+        assertFalse(service.isValid("ID1"));
+    }
+
+    @Test
+    void shouldReturnFalseWhenActivatingUnknownId() {
+
+        DigitalIDService service = new DigitalIDService();
+
+        boolean result = service.activateID("UNKNOWN");
+
+        assertFalse(result);
+    }
 }

@@ -46,6 +46,14 @@ public class VerificationService {
             );
         }
 
+        if (digitalID.isExpired()) {
+
+            return new OperationResult(
+                    false,
+                    "IDENTITY EXPIRED"
+            );
+        }
+
         if (digitalID.hasFraudFlag()) {
 
             return new OperationResult(
@@ -98,6 +106,7 @@ public class VerificationService {
                 DOB: %s
                 ADDRESS: %s
                 STATUS: %s
+                EXPIRY DATE: %s
                 PASSED DRIVING TEST: %s
                 DRIVING RESTRICTED: %s
                 TAX RESTRICTED: %s
@@ -108,6 +117,7 @@ public class VerificationService {
                 digitalID.getDateOfBirth(),
                 digitalID.getAddress(),
                 digitalID.getStatus(),
+                digitalID.getExpiryDate(),
                 digitalID.hasPassedDrivingTest(),
                 digitalID.isDrivingRestricted(),
                 digitalID.isTaxRestricted(),

@@ -12,85 +12,128 @@ public class VerificationServiceTest {
     @Test
     void shouldReturnValidForBankWhenActive() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
-        DigitalID id = digitalIDService.createID(
-                "Alex",
-                "2006-01-01",
-                "London"
-        );
+        DigitalID digitalID =
+                digitalIDService.createID(
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
+
+        String id =
+                digitalID.getIdNumber();
 
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
-                        id.getIdNumber(),
+                        id,
                         OrganisationType.BANK
                 );
 
         assertTrue(result.isSuccess());
-        assertEquals("VALID", result.getMessage());
+
+        assertEquals(
+                "VALID",
+                result.getMessage()
+        );
     }
 
     @Test
     void shouldReturnInvalidForRevokedID() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
-        DigitalID id = digitalIDService.createID(
-                "Alex",
-                "2006-01-01",
-                "London"
-        );
+        DigitalID digitalID =
+                digitalIDService.createID(
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
 
-        digitalIDService.revokeID(id.getIdNumber());
+        String id =
+                digitalID.getIdNumber();
+
+        digitalIDService.revokeID(id);
 
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
-                        id.getIdNumber(),
+                        id,
                         OrganisationType.EMPLOYER
                 );
 
         assertFalse(result.isSuccess());
-        assertEquals("INVALID", result.getMessage());
+
+        assertEquals(
+                "INVALID",
+                result.getMessage()
+        );
     }
 
     @Test
     void shouldReturnFullDetailsForCentralAuthority() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
-        DigitalID id = digitalIDService.createID(
-                "Alex",
-                "2006-01-01",
-                "London"
-        );
+        DigitalID digitalID =
+                digitalIDService.createID(
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
+
+        String id =
+                digitalID.getIdNumber();
 
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
-                        id.getIdNumber(),
+                        id,
                         OrganisationType.CENTRAL_AUTHORITY
                 );
 
         assertTrue(result.isSuccess());
-        assertTrue(result.getMessage().contains("Alex"));
-        assertTrue(result.getMessage().contains("ACTIVE"));
+
+        assertTrue(
+                result.getMessage().contains("Alex")
+        );
+
+        assertTrue(
+                result.getMessage().contains("ACTIVE")
+        );
+
+        assertTrue(
+                result.getMessage()
+                        .contains("EXPIRY DATE")
+        );
     }
 
     @Test
     void shouldReturnIdentityNotFound() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -99,135 +142,208 @@ public class VerificationServiceTest {
                 );
 
         assertFalse(result.isSuccess());
-        assertEquals("IDENTITY NOT FOUND", result.getMessage());
+
+        assertEquals(
+                "IDENTITY NOT FOUND",
+                result.getMessage()
+        );
     }
 
     @Test
     void shouldFailDrivingVerificationIfTestNotPassed() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
-        DigitalID id = digitalIDService.createID(
-                "Alex",
-                "2006-01-01",
-                "London"
-        );
+        DigitalID digitalID =
+                digitalIDService.createID(
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
+
+        String id =
+                digitalID.getIdNumber();
 
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
-                        id.getIdNumber(),
+                        id,
                         OrganisationType.DRIVING_LICENCE_AUTHORITY
                 );
 
         assertFalse(result.isSuccess());
-        assertEquals("DRIVING TEST NOT PASSED", result.getMessage());
+
+        assertEquals(
+                "DRIVING TEST NOT PASSED",
+                result.getMessage()
+        );
     }
 
     @Test
     void shouldReturnLicenceEligibleWhenDrivingTestPassed() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
-        DigitalID id = digitalIDService.createID(
-                "Alex",
-                "2006-01-01",
-                "London"
+        DigitalID digitalID =
+                digitalIDService.createID(
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
+
+        String id =
+                digitalID.getIdNumber();
+
+        digitalIDService.markDrivingTestPassed(
+                id
         );
 
-        digitalIDService.markDrivingTestPassed(id.getIdNumber());
-
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
-                        id.getIdNumber(),
+                        id,
                         OrganisationType.DRIVING_LICENCE_AUTHORITY
                 );
 
         assertTrue(result.isSuccess());
-        assertEquals("LICENCE ELIGIBLE", result.getMessage());
+
+        assertEquals(
+                "LICENCE ELIGIBLE",
+                result.getMessage()
+        );
     }
 
     @Test
     void shouldBlockDrivingEligibilityWhenRestricted() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
-        DigitalID id = digitalIDService.createID(
-                "Alex",
-                "2006-01-01",
-                "London"
+        DigitalID digitalID =
+                digitalIDService.createID(
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
+
+        String id =
+                digitalID.getIdNumber();
+
+        digitalIDService.markDrivingTestPassed(
+                id
         );
 
-        digitalIDService.markDrivingTestPassed(id.getIdNumber());
-        digitalIDService.setDrivingRestriction(id.getIdNumber(), true);
+        digitalIDService.setDrivingRestriction(
+                id,
+                true
+        );
 
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
-                        id.getIdNumber(),
+                        id,
                         OrganisationType.DRIVING_LICENCE_AUTHORITY
                 );
 
         assertFalse(result.isSuccess());
-        assertEquals("DRIVING RESTRICTION ACTIVE", result.getMessage());
+
+        assertEquals(
+                "DRIVING RESTRICTION ACTIVE",
+                result.getMessage()
+        );
     }
 
     @Test
     void shouldRejectFraudulentIdentity() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
-        DigitalID id = digitalIDService.createID(
-                "Alex",
-                "2006-01-01",
-                "London"
+        DigitalID digitalID =
+                digitalIDService.createID(
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
+
+        String id =
+                digitalID.getIdNumber();
+
+        digitalIDService.setFraudFlag(
+                id,
+                true
         );
 
-        digitalIDService.setFraudFlag(id.getIdNumber(), true);
-
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
-                        id.getIdNumber(),
+                        id,
                         OrganisationType.BANK
                 );
 
         assertFalse(result.isSuccess());
-        assertEquals("IDENTITY FLAGGED FOR FRAUD", result.getMessage());
+
+        assertEquals(
+                "IDENTITY FLAGGED FOR FRAUD",
+                result.getMessage()
+        );
     }
 
     @Test
     void shouldRejectFraudAcrossAllVerificationTypes() {
 
-        DigitalIDService digitalIDService = new DigitalIDService();
+        DigitalIDService digitalIDService =
+                new DigitalIDService();
 
-        DigitalID id = digitalIDService.createID(
-                "Alex",
-                "2006-01-01",
-                "London"
+        DigitalID digitalID =
+                digitalIDService.createID(
+                        "Alex",
+                        "2006-01-01",
+                        "London"
+                );
+
+        String id =
+                digitalID.getIdNumber();
+
+        digitalIDService.setFraudFlag(
+                id,
+                true
         );
 
-        digitalIDService.setFraudFlag(id.getIdNumber(), true);
-
         VerificationService verificationService =
-                new VerificationService(digitalIDService);
+                new VerificationService(
+                        digitalIDService
+                );
 
         OperationResult result =
                 verificationService.verifyIdentity(
-                        id.getIdNumber(),
+                        id,
                         OrganisationType.DRIVING_LICENCE_AUTHORITY
                 );
 
         assertFalse(result.isSuccess());
-        assertEquals("IDENTITY FLAGGED FOR FRAUD", result.getMessage());
+
+        assertEquals(
+                "IDENTITY FLAGGED FOR FRAUD",
+                result.getMessage()
+        );
     }
 }

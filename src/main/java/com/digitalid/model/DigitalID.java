@@ -2,23 +2,29 @@ package com.digitalid.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
-import java.util.UUID;
 
 public class DigitalID {
 
     private final String idNumber;
+
     private final String fullName;
+
     private final String dateOfBirth;
 
+    private final LocalDate expiryDate;
+
     private String address;
+
     private Status status;
 
     private boolean passedDrivingTest;
+
     private boolean drivingRestricted;
+
     private boolean taxRestricted;
+
     private boolean fraudFlag;
 
-    // === KEEP THIS (DO NOT BREAK EXISTING CODE) ===
     public DigitalID(String idNumber,
                      String fullName,
                      String dateOfBirth,
@@ -30,30 +36,19 @@ public class DigitalID {
         this.fullName = fullName;
         this.dateOfBirth = dateOfBirth;
         this.address = address;
+
+        this.expiryDate =
+                LocalDate.now().plusYears(10);
+
         this.status = Status.ACTIVE;
     }
 
-    // === DOMAIN-LEVEL ID GENERATION (NEW, SAFE) ===
-    public static String generateId() {
-        return "ID-" + UUID.randomUUID().toString().substring(0, 8);
-    }
-
-    // === OPTIONAL FACTORY METHOD (CLEANER CREATION) ===
-    public static DigitalID create(String fullName,
-                                   String dateOfBirth,
-                                   String address) {
-
-        return new DigitalID(
-                generateId(),
-                fullName,
-                dateOfBirth,
-                address
-        );
-    }
-
-    private void validateDateOfBirth(String dateOfBirth) {
+    private void validateDateOfBirth(
+            String dateOfBirth
+    ) {
 
         try {
+
             LocalDate.parse(dateOfBirth);
 
         } catch (DateTimeParseException e) {
@@ -63,8 +58,6 @@ public class DigitalID {
             );
         }
     }
-
-    // === GETTERS ===
 
     public String getIdNumber() {
         return idNumber;
@@ -76,6 +69,10 @@ public class DigitalID {
 
     public String getDateOfBirth() {
         return dateOfBirth;
+    }
+
+    public LocalDate getExpiryDate() {
+        return expiryDate;
     }
 
     public String getAddress() {
@@ -102,12 +99,6 @@ public class DigitalID {
         return fraudFlag;
     }
 
-    public boolean isActive() {
-        return status == Status.ACTIVE;
-    }
-
-    // === MUTATIONS ===
-
     public void updateAddress(String address) {
         this.address = address;
     }
@@ -128,15 +119,35 @@ public class DigitalID {
         this.passedDrivingTest = true;
     }
 
-    public void setDrivingRestriction(boolean restricted) {
+    public void setDrivingRestriction(
+            boolean restricted
+    ) {
+
         this.drivingRestricted = restricted;
     }
 
-    public void setTaxRestriction(boolean restricted) {
+    public void setTaxRestriction(
+            boolean restricted
+    ) {
+
         this.taxRestricted = restricted;
     }
 
-    public void setFraudFlag(boolean fraudFlag) {
+    public void setFraudFlag(
+            boolean fraudFlag
+    ) {
+
         this.fraudFlag = fraudFlag;
+    }
+
+    public boolean isActive() {
+
+        return status == Status.ACTIVE;
+    }
+
+    public boolean isExpired() {
+
+        return LocalDate.now()
+                .isAfter(expiryDate);
     }
 }

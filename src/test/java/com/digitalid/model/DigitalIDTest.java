@@ -2,6 +2,8 @@ package com.digitalid.model;
 
 import org.junit.jupiter.api.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class DigitalIDTest {
@@ -16,7 +18,10 @@ public class DigitalIDTest {
                 "London"
         );
 
-        assertEquals("ID123", digitalID.getIdNumber());
+        assertEquals(
+                "ID123",
+                digitalID.getIdNumber()
+        );
 
         assertEquals(
                 "Alex Munden",
@@ -37,6 +42,13 @@ public class DigitalIDTest {
                 Status.ACTIVE,
                 digitalID.getStatus()
         );
+
+        assertEquals(
+                LocalDate.now().plusYears(10),
+                digitalID.getExpiryDate()
+        );
+
+        assertFalse(digitalID.isExpired());
 
         assertTrue(digitalID.isActive());
     }
@@ -155,5 +167,18 @@ public class DigitalIDTest {
                         "London"
                 )
         );
+    }
+
+    @Test
+    void shouldNotBeExpiredWhenCreated() {
+
+        DigitalID digitalID = new DigitalID(
+                "ID999",
+                "Test User",
+                "2000-01-01",
+                "London"
+        );
+
+        assertFalse(digitalID.isExpired());
     }
 }

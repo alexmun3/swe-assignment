@@ -65,40 +65,139 @@ public class VerificationService {
         return switch (organisationType) {
 
             case BANK ->
-                    policyService.verifyForBank(
-                            digitalID
-                    );
+                    buildBankResponse(digitalID);
 
             case EMPLOYER ->
-                    policyService.verifyForEmployer(
-                            digitalID
-                    );
+                    buildEmployerResponse(digitalID);
 
             case TAX_AUTHORITY ->
-                    policyService.verifyForTaxAuthority(
-                            digitalID
-                    );
+                    buildTaxAuthorityResponse(digitalID);
 
             case DRIVING_LICENCE_AUTHORITY ->
-                    policyService.verifyForDrivingAuthority(
-                            digitalID
-                    );
+                    buildDrivingAuthorityResponse(digitalID);
 
             case CENTRAL_AUTHORITY ->
-                    new OperationResult(
-                            true,
-                            buildFullIdentityDetails(
-                                    digitalID
-                            )
-                    );
+                    buildCentralAuthorityResponse(digitalID);
         };
     }
 
-    private String buildFullIdentityDetails(
+    private OperationResult buildBankResponse(
             DigitalID digitalID
     ) {
 
-        return """
+        OperationResult result =
+                policyService.verifyForBank(
+                        digitalID
+                );
+
+        return new OperationResult(
+                result.isSuccess(),
+                """
+                BANK VERIFICATION
+                
+                NAME: %s
+                DOB: %s
+                STATUS: %s
+                EXPIRY DATE: %s
+                
+                RESULT: %s
+                """.formatted(
+                        digitalID.getFullName(),
+                        digitalID.getDateOfBirth(),
+                        digitalID.getStatus(),
+                        digitalID.getExpiryDate(),
+                        result.getMessage()
+                )
+        );
+    }
+
+    private OperationResult buildEmployerResponse(
+            DigitalID digitalID
+    ) {
+
+        OperationResult result =
+                policyService.verifyForEmployer(
+                        digitalID
+                );
+
+        return new OperationResult(
+                result.isSuccess(),
+                """
+                EMPLOYER VERIFICATION
+                
+                NAME: %s
+                STATUS: %s
+                
+                RESULT: %s
+                """.formatted(
+                        digitalID.getFullName(),
+                        digitalID.getStatus(),
+                        result.getMessage()
+                )
+        );
+    }
+
+    private OperationResult buildTaxAuthorityResponse(
+            DigitalID digitalID
+    ) {
+
+        OperationResult result =
+                policyService.verifyForTaxAuthority(
+                        digitalID
+                );
+
+        return new OperationResult(
+                result.isSuccess(),
+                """
+                TAX AUTHORITY VERIFICATION
+                
+                NAME: %s
+                TAX RESTRICTED: %s
+                
+                RESULT: %s
+                """.formatted(
+                        digitalID.getFullName(),
+                        digitalID.isTaxRestricted(),
+                        result.getMessage()
+                )
+        );
+    }
+
+    private OperationResult buildDrivingAuthorityResponse(
+            DigitalID digitalID
+    ) {
+
+        OperationResult result =
+                policyService.verifyForDrivingAuthority(
+                        digitalID
+                );
+
+        return new OperationResult(
+                result.isSuccess(),
+                """
+                DRIVING AUTHORITY VERIFICATION
+                
+                NAME: %s
+                PASSED DRIVING TEST: %s
+                DRIVING RESTRICTED: %s
+                
+                RESULT: %s
+                """.formatted(
+                        digitalID.getFullName(),
+                        digitalID.hasPassedDrivingTest(),
+                        digitalID.isDrivingRestricted(),
+                        result.getMessage()
+                )
+        );
+    }
+
+    private OperationResult buildCentralAuthorityResponse(
+            DigitalID digitalID
+    ) {
+
+        return new OperationResult(
+                true,
+                """
                 FULL IDENTITY DETAILS
                 
                 ID: %s
@@ -112,16 +211,17 @@ public class VerificationService {
                 TAX RESTRICTED: %s
                 FRAUD FLAG: %s
                 """.formatted(
-                digitalID.getIdNumber(),
-                digitalID.getFullName(),
-                digitalID.getDateOfBirth(),
-                digitalID.getAddress(),
-                digitalID.getStatus(),
-                digitalID.getExpiryDate(),
-                digitalID.hasPassedDrivingTest(),
-                digitalID.isDrivingRestricted(),
-                digitalID.isTaxRestricted(),
-                digitalID.hasFraudFlag()
+                        digitalID.getIdNumber(),
+                        digitalID.getFullName(),
+                        digitalID.getDateOfBirth(),
+                        digitalID.getAddress(),
+                        digitalID.getStatus(),
+                        digitalID.getExpiryDate(),
+                        digitalID.hasPassedDrivingTest(),
+                        digitalID.isDrivingRestricted(),
+                        digitalID.isTaxRestricted(),
+                        digitalID.hasFraudFlag()
+                )
         );
     }
 }

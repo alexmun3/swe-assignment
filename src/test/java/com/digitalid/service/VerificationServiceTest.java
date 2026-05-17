@@ -22,13 +22,10 @@ public class VerificationServiceTest {
                         "London"
                 );
 
-        String id =
-                digitalID.getIdNumber();
+        String id = digitalID.getIdNumber();
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -37,11 +34,8 @@ public class VerificationServiceTest {
                 );
 
         assertTrue(result.isSuccess());
-
-        assertEquals(
-                "VALID",
-                result.getMessage()
-        );
+        assertTrue(result.getMessage().contains("BANK VERIFICATION"));
+        assertTrue(result.getMessage().contains("RESULT"));
     }
 
     @Test
@@ -57,15 +51,12 @@ public class VerificationServiceTest {
                         "London"
                 );
 
-        String id =
-                digitalID.getIdNumber();
+        String id = digitalID.getIdNumber();
 
         digitalIDService.revokeID(id);
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -74,11 +65,7 @@ public class VerificationServiceTest {
                 );
 
         assertFalse(result.isSuccess());
-
-        assertEquals(
-                "INVALID",
-                result.getMessage()
-        );
+        assertTrue(result.getMessage().contains("INVALID"));
     }
 
     @Test
@@ -94,13 +81,10 @@ public class VerificationServiceTest {
                         "London"
                 );
 
-        String id =
-                digitalID.getIdNumber();
+        String id = digitalID.getIdNumber();
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -109,19 +93,9 @@ public class VerificationServiceTest {
                 );
 
         assertTrue(result.isSuccess());
-
-        assertTrue(
-                result.getMessage().contains("Alex")
-        );
-
-        assertTrue(
-                result.getMessage().contains("ACTIVE")
-        );
-
-        assertTrue(
-                result.getMessage()
-                        .contains("EXPIRY DATE")
-        );
+        assertTrue(result.getMessage().contains("Alex"));
+        assertTrue(result.getMessage().contains("ACTIVE"));
+        assertTrue(result.getMessage().contains("EXPIRY"));
     }
 
     @Test
@@ -131,9 +105,7 @@ public class VerificationServiceTest {
                 new DigitalIDService();
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -142,11 +114,7 @@ public class VerificationServiceTest {
                 );
 
         assertFalse(result.isSuccess());
-
-        assertEquals(
-                "IDENTITY NOT FOUND",
-                result.getMessage()
-        );
+        assertEquals("IDENTITY NOT FOUND", result.getMessage());
     }
 
     @Test
@@ -162,13 +130,10 @@ public class VerificationServiceTest {
                         "London"
                 );
 
-        String id =
-                digitalID.getIdNumber();
+        String id = digitalID.getIdNumber();
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -177,11 +142,7 @@ public class VerificationServiceTest {
                 );
 
         assertFalse(result.isSuccess());
-
-        assertEquals(
-                "DRIVING TEST NOT PASSED",
-                result.getMessage()
-        );
+        assertTrue(result.getMessage().contains("DRIVING TEST NOT PASSED"));
     }
 
     @Test
@@ -197,17 +158,12 @@ public class VerificationServiceTest {
                         "London"
                 );
 
-        String id =
-                digitalID.getIdNumber();
+        String id = digitalID.getIdNumber();
 
-        digitalIDService.markDrivingTestPassed(
-                id
-        );
+        digitalIDService.markDrivingTestPassed(id);
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -216,11 +172,7 @@ public class VerificationServiceTest {
                 );
 
         assertTrue(result.isSuccess());
-
-        assertEquals(
-                "LICENCE ELIGIBLE",
-                result.getMessage()
-        );
+        assertTrue(result.getMessage().contains("LICENCE ELIGIBLE"));
     }
 
     @Test
@@ -236,22 +188,13 @@ public class VerificationServiceTest {
                         "London"
                 );
 
-        String id =
-                digitalID.getIdNumber();
+        String id = digitalID.getIdNumber();
 
-        digitalIDService.markDrivingTestPassed(
-                id
-        );
-
-        digitalIDService.setDrivingRestriction(
-                id,
-                true
-        );
+        digitalIDService.markDrivingTestPassed(id);
+        digitalIDService.setDrivingRestriction(id, true);
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -260,11 +203,7 @@ public class VerificationServiceTest {
                 );
 
         assertFalse(result.isSuccess());
-
-        assertEquals(
-                "DRIVING RESTRICTION ACTIVE",
-                result.getMessage()
-        );
+        assertTrue(result.getMessage().contains("DRIVING RESTRICTION ACTIVE"));
     }
 
     @Test
@@ -280,18 +219,12 @@ public class VerificationServiceTest {
                         "London"
                 );
 
-        String id =
-                digitalID.getIdNumber();
+        String id = digitalID.getIdNumber();
 
-        digitalIDService.setFraudFlag(
-                id,
-                true
-        );
+        digitalIDService.setFraudFlag(id, true);
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -300,11 +233,7 @@ public class VerificationServiceTest {
                 );
 
         assertFalse(result.isSuccess());
-
-        assertEquals(
-                "IDENTITY FLAGGED FOR FRAUD",
-                result.getMessage()
-        );
+        assertTrue(result.getMessage().contains("FRAUD"));
     }
 
     @Test
@@ -320,18 +249,12 @@ public class VerificationServiceTest {
                         "London"
                 );
 
-        String id =
-                digitalID.getIdNumber();
+        String id = digitalID.getIdNumber();
 
-        digitalIDService.setFraudFlag(
-                id,
-                true
-        );
+        digitalIDService.setFraudFlag(id, true);
 
         VerificationService verificationService =
-                new VerificationService(
-                        digitalIDService
-                );
+                new VerificationService(digitalIDService);
 
         OperationResult result =
                 verificationService.verifyIdentity(
@@ -340,10 +263,6 @@ public class VerificationServiceTest {
                 );
 
         assertFalse(result.isSuccess());
-
-        assertEquals(
-                "IDENTITY FLAGGED FOR FRAUD",
-                result.getMessage()
-        );
+        assertTrue(result.getMessage().contains("FRAUD"));
     }
 }

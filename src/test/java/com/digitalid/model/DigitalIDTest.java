@@ -156,7 +156,7 @@ public class DigitalIDTest {
     void shouldRejectInvalidDateFormat() {
 
         assertThrows(
-                IllegalArgumentException.class,
+                InvalidIdentityException.class,
                 () -> new DigitalID(
                         "ID123",
                         "Alex",

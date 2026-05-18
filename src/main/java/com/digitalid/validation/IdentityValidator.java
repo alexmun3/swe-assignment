@@ -3,6 +3,11 @@ package com.digitalid.validation;
 import com.digitalid.model.DigitalID;
 import com.digitalid.model.Status;
 
+/**
+ * Performs validation checks on digital identities
+ * before lifecycle operations are applied.
+ */
+
 public class IdentityValidator {
 
     public boolean canUpdate(DigitalID digitalID) {

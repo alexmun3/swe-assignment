@@ -5,6 +5,11 @@ import com.digitalid.model.DigitalID;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * In-memory repository for storing and
+ * retrieving digital identities.
+ */
+
 public class DigitalIDRepository {
 
     private final Map<String, DigitalID> database =

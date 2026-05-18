@@ -6,6 +6,11 @@ import com.digitalid.model.Status;
 import com.digitalid.repository.DigitalIDRepository;
 import com.digitalid.validation.IdentityValidator;
 
+/**
+ * Handles creation and lifecycle management
+ * of digital identities.
+ */
+
 public class DigitalIDService {
 
     private final DigitalIDRepository repository =

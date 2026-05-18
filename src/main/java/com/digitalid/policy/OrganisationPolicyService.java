@@ -4,6 +4,11 @@ import com.digitalid.model.DigitalID;
 import com.digitalid.model.OperationResult;
 import com.digitalid.model.Status;
 
+/**
+ * Contains organisation-specific verification
+ * and access control rules.
+ */
+
 public class OrganisationPolicyService {
 
     public OperationResult verifyForBank(DigitalID digitalID) {

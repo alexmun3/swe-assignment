@@ -3,6 +3,12 @@ package com.digitalid.model;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 
+/**
+ * Represents a digital identity within the system,
+ * including verification status, restrictions,
+ * and lifecycle state.
+ */
+
 public class DigitalID {
 
     private final String idNumber;

@@ -5,6 +5,11 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
 
+/**
+ * Records audit events and system actions
+ * performed within the application.
+ */
+
 public class AuditLogger {
 
     private static final String LOG_FILE = "audit.log";

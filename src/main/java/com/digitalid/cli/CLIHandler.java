@@ -8,6 +8,11 @@ import com.digitalid.service.VerificationService;
 
 import java.util.Scanner;
 
+/**
+ * Command-line interface for interacting
+ * with the Digital ID system.
+ */
+
 public class CLIHandler {
 
     private final DigitalIDService digitalIDService =

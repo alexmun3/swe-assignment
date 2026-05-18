@@ -6,6 +6,11 @@ import com.digitalid.model.OperationResult;
 import com.digitalid.model.OrganisationType;
 import com.digitalid.policy.OrganisationPolicyService;
 
+/**
+ * Handles organisation verification requests
+ * and controls access to identity information.
+ */
+
 public class VerificationService {
 
     private final DigitalIDService digitalIDService;

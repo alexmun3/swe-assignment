@@ -12,7 +12,6 @@ import java.util.Scanner;
  * Command-line interface for interacting
  * with the Digital ID system.
  */
-
 public class CLIHandler {
 
     private final DigitalIDService digitalIDService =
@@ -41,7 +40,12 @@ public class CLIHandler {
                 case 4 -> revokeDigitalID();
                 case 5 -> verifyIdentity();
                 case 6 -> viewIdentity();
-                case 7 -> exitSystem();
+
+                case 7 -> markDrivingTestPassed();
+                case 8 -> setFraudFlag();
+                case 9 -> setDrivingRestriction();
+
+                case 10 -> exitSystem();
 
                 default -> System.out.println("Invalid option");
             }
@@ -58,7 +62,13 @@ public class CLIHandler {
                 4. Revoke Digital ID
                 5. Verify Identity
                 6. View Identity
-                7. Exit
+                
+                --- ADMIN ACTIONS ---
+                7. Mark Driving Test Passed
+                8. Set Fraud Flag
+                9. Set Driving Restriction
+                
+                10. Exit
                 """);
     }
 
@@ -86,7 +96,7 @@ public class CLIHandler {
                 digitalIDService.createID(name, dob, address);
 
         if (digitalID == null) {
-            System.out.println("Failed to create Digital ID (possibly duplicate or invalid)");
+            System.out.println("Failed to create Digital ID");
             return;
         }
 
@@ -179,9 +189,65 @@ public class CLIHandler {
         String id = scanner.nextLine();
 
         OperationResult result =
-                verificationService.verifyIdentity(id, OrganisationType.CENTRAL_AUTHORITY);
+                verificationService.verifyIdentity(
+                        id,
+                        OrganisationType.CENTRAL_AUTHORITY
+                );
 
         System.out.println(result.getMessage());
+    }
+
+    // ---------------- ADMIN ACTIONS ----------------
+
+    private void markDrivingTestPassed() {
+
+        System.out.print("ID: ");
+        String id = scanner.nextLine();
+
+        boolean result =
+                digitalIDService.markDrivingTestPassed(id);
+
+        System.out.println(
+                result
+                        ? "Driving test marked as PASSED"
+                        : "Operation failed"
+        );
+    }
+
+    private void setFraudFlag() {
+
+        System.out.print("ID: ");
+        String id = scanner.nextLine();
+
+        System.out.print("Fraud flag (true/false): ");
+        boolean flag = Boolean.parseBoolean(scanner.nextLine());
+
+        boolean result =
+                digitalIDService.setFraudFlag(id, flag);
+
+        System.out.println(
+                result
+                        ? "Fraud flag updated"
+                        : "Operation failed"
+        );
+    }
+
+    private void setDrivingRestriction() {
+
+        System.out.print("ID: ");
+        String id = scanner.nextLine();
+
+        System.out.print("Restricted (true/false): ");
+        boolean restricted = Boolean.parseBoolean(scanner.nextLine());
+
+        boolean result =
+                digitalIDService.setDrivingRestriction(id, restricted);
+
+        System.out.println(
+                result
+                        ? "Driving restriction updated"
+                        : "Operation failed"
+        );
     }
 
     private void exitSystem() {

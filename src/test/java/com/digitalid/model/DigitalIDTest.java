@@ -1,5 +1,6 @@
 package com.digitalid.model;
 
+import com.digitalid.exception.InvalidIdentityException;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDate;
@@ -112,25 +113,21 @@ public class DigitalIDTest {
     }
 
     @Test
-    void revokedDigitalIdCanBeReactivated() {
+    void shouldThrowExceptionWhenReactivatingRevokedId() {
 
         DigitalID digitalID = new DigitalID(
                 "ID123",
-                "Alex Munden",
+                "Alex",
                 "2005-01-01",
                 "London"
         );
 
         digitalID.revoke();
 
-        digitalID.activate();
-
-        assertEquals(
-                Status.ACTIVE,
-                digitalID.getStatus()
+        assertThrows(
+                InvalidIdentityException.class,
+                digitalID::activate
         );
-
-        assertTrue(digitalID.isActive());
     }
 
     @Test

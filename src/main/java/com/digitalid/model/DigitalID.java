@@ -2,6 +2,7 @@ package com.digitalid.model;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
+import com.digitalid.exception.InvalidIdentityException;
 
 /**
  * Represents a digital identity within the system,
@@ -59,7 +60,7 @@ public class DigitalID {
 
         } catch (DateTimeParseException e) {
 
-            throw new IllegalArgumentException(
+            throw new InvalidIdentityException(
                     "Invalid date format. Use YYYY-MM-DD"
             );
         }
@@ -118,6 +119,14 @@ public class DigitalID {
     }
 
     public void activate() {
+
+        if (status == Status.REVOKED) {
+
+            throw new InvalidIdentityException(
+                    "Revoked identities cannot be reactivated"
+            );
+        }
+
         this.status = Status.ACTIVE;
     }
 

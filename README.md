@@ -1,5 +1,7 @@
 # Digital Identity Management System
 
+GITHUB URL - https://github.com/alexmun3/swe-assignment
+
 ## Overview
 
 This project is a Java-based Digital Identity Management System designed to simulate how organisations may verify and manage digital identities securely.
